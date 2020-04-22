@@ -21,6 +21,7 @@ workflowset = helper.wset
 sdict = helper.sdict
 
 capacity = [1, 2, 4, 8, 16, 48, 64, 96]
+#number of composite applications
 N_WORKFLOW = 3
 
 def get_N():
@@ -93,7 +94,7 @@ print('CODE:', code)
 def get_servicenum():
     return len(code)
 
-
+#get network latency
 def getnl(request, workflow, solution):
     start = cloud[solution[1][code.index(workflow[0][2])]]
     end = cloud[solution[1][code.index(workflow[-1][2])]]
@@ -109,7 +110,7 @@ def getnl(request, workflow, solution):
     # print("network latency: ", anl)
     return anl
 
-
+#get makespan
 def getwrt(workflow, r, solution):
     estlist = []
     for i in workflow:
@@ -135,7 +136,7 @@ def getwrt(workflow, r, solution):
     # print("##response time: ", rt)
     return rt
 
-
+#get response time
 def get_rt(solution):
     count = 0
     for i in range(N_WORKFLOW):
@@ -225,7 +226,7 @@ def candidate(cost, time):
     return bitsset
 
 
-#agg
+#AO-Seed
 class MADA(IntegerProblem):
 
     def __init__(self):
@@ -268,7 +269,7 @@ class MADA(IntegerProblem):
     def get_name(self):
         return 'MADA'
 
-#so-time
+#SO-Seed for time
 class MADT(IntegerProblem):
 
     def __init__(self):
@@ -312,7 +313,7 @@ class MADT(IntegerProblem):
         return 'MADT'
 
 
-#so-cost
+#SO-Seed for cost
 class MADC(IntegerProblem):
 
     def __init__(self):
@@ -355,7 +356,7 @@ class MADC(IntegerProblem):
     def get_name(self):
         return 'MADC'
 
-
+#MOP
 class MADM(IntegerProblem):
 
     def __init__(self):
