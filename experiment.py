@@ -4,7 +4,7 @@ from jmetal.algorithm.multiobjective.nsgaii import NSGAII
 from jmetal.operator import BitFlipMutation, SPXCrossover, IntegerPolynomialMutation
 from jmetal.operator.crossover import IntegerCrossover
 from jmetal.operator.selection import BinaryTournamentSelection
-from jmetal.problem.multiobjective.MAD import *#MADT, MADA, MADC, MADM, get_costseed, merge, pool, greedy
+from jmetal.problem.multiobjective.MAD import *
 from jmetal.util.observer import ProgressBarObserver, VisualizerObserver, PrintObjectivesObserver
 from jmetal.util.solutions_utils import print_function_values_to_file, print_variables_to_file, get_non_dominated_solutions
 from jmetal.util.solutionsgenerator import InjectorGenerator
@@ -21,12 +21,12 @@ logging.basicConfig(level=logging.INFO, filename="Result20190123.log")
 
 N_seeds = 50
 run = 30
-fm = 'NSGAII30'
+fm = 'NSGAII'
 
 
 #if __name__ == '__main__':
 logging.info(get_apps())
-#Find AO seed
+#Find AO seed: GA
 problem = MADA()
 max_evaluations = 20000
 algorithm = GeneticAlgorithm(
@@ -47,7 +47,7 @@ logging.info('Aggregated seed solution is {}: {}'.format(aggseed.variables, aggs
 #print(change)
 
 
-#Find the min time, also one SO seed
+#Find the min time, also SO time seed: GA
 problem = MADT()
 max_evaluations = 10000
 algorithm = GeneticAlgorithm(
@@ -64,7 +64,7 @@ sotimeseed = algorithm.get_result()
 #mintime = timeseed.objectives[0]
 logging.info('SO-time seed solution: {}: {}'.format(sotimeseed.variables, sotimeseed.objectives[0]))
 
-# Find the min cost, also one SO seed
+# Find the min cost, also SO cost seed: GA
 problem = MADC()
 #timeseed = problem.create_solution()
 # timeseed.variables = greedy()
@@ -83,68 +83,12 @@ algorithm.run()
 socostseed = algorithm.get_result()
 logging.info('SO-cost seed solution: {}: {}'.format(socostseed.variables, socostseed.objectives[0]))
 
+
+# application-specific seeds
 appcostseed = greedy()
-
-# App seeds
-#mergeappseed = merge()
 apptimeseedset, rateset = pool()
-#code, sset = dict()
 
-totalrate = sum(rateset)
-f = []
-for rate in rateset:
-    f.append(rate/totalrate)
-#print(f)
-
-#bit-merge
-
-#New
-#random:bmr
-seedset = [appcostseed] * get_N() + apptimeseedset
-#print(seedset)
-bmrseeds = []
-while len(bmrseeds) <= N_seeds:
-    index = random.randrange(get_N() * 2)
-    appindex = int(index / 2)
-    seed = copy.deepcopy(seedset[index])
-    for s in range(get_servicenum()):
-        if code[s] not in sset[appindex]:
-            another = random.randrange(get_N())
-            while code[s] not in sset[another]:
-                another = random.randrange(get_N())
-            if random.random() > 0.5:
-                seed[s] = seedset[another + get_N()][s]
-                seed[s + get_servicenum()] = seedset[another + get_N()][s + get_servicenum()]
-            else:
-                seed[s] = seedset[another + get_N()][s]
-                seed[s + get_servicenum()] = seedset[another + get_N()][s + get_servicenum()]
-    bmrseeds.append(seed)
-#print(bmrseeds)
-#weight
-bmwseeds = []
-while len(bmwseeds) <= N_seeds:
-    appindex = np.random.choice(get_N(), 1, p = f)[0]
-    if random.random() > 0.5:
-        index = appindex
-    else:
-        index = appindex + get_N()
-    seed = copy.deepcopy(seedset[index])
-    for s in range(get_servicenum()):
-        if code[s] not in sset[appindex]:
-            another = random.randrange(get_N())
-            while code[s] not in sset[another]:
-                another = random.randrange(get_N())
-            if random.random() > 0.5:
-                seed[s] = seedset[another + get_N()][s]
-                seed[s + get_servicenum()] = seedset[another + get_N()][s + get_servicenum()]
-            else:
-                seed[s] = seedset[another + get_N()][s]
-                seed[s + get_servicenum()] = seedset[another + get_N()][s + get_servicenum()]
-    bmwseeds.append(seed)
-#print(bmwseeds)
-
-#string-merge
-#random:smr
+#BB solutions
 smrseeds = seedset
 typeset = [appcostseed[:get_servicenum()]] * get_N()
 locationset = [appcostseed[get_servicenum():]] * get_N()
@@ -158,27 +102,8 @@ while len(smrseeds) <= N_seeds:
 #print(smrseeds)
 
 
-#weight
-smwseeds = seedset
-typeset = [appcostseed[:get_servicenum()]] * get_N()
-locationset = [appcostseed[get_servicenum():]] * get_N()
-for seed in apptimeseedset:
-    typeset.append(seed[:get_servicenum()])
-    locationset.append(seed[get_servicenum():])
-#print(typeset)
-while len(smwseeds) <= N_seeds:
-    position1 = np.random.choice(get_N(), 1, p=f)[0]
-    position2 = np.random.choice(get_N(), 1, p=f)[0]
-    typestring = [typeset[position1 * 2], typeset[position1 * 2 + 1]]
-    locationstring = [locationset[position2 * 2], locationset[position2 * 2 + 1]]
-    seed = random.choice(typestring) + random.choice(locationstring)
-    smwseeds.append(seed)
-#print(smwseeds)
-
-
-
 #Experiments
-#No seeds
+#No seeds: MOEAs
 noseedprocessruns = []
 reference = []
 #noseedfront = []
@@ -210,7 +135,7 @@ for i in range(run):
     noseedprocessruns.append(process)
     reference += front
 
-
+#seeding MOEAs
 def Experiment(seedstrings):
     problem = MADM()
     seedset = []
@@ -240,7 +165,7 @@ def Experiment(seedstrings):
     return process, algorithm.get_result()
 
 
-# Agg
+# AO-Seed
 #aggfront = []
 aggprocessruns = []
 for i in range(run):
@@ -252,7 +177,7 @@ for i in range(run):
     reference += front
 
 
-# SO
+# SO-Seed
 #sofront = []
 soprocessruns = []
 for i in range(run):
@@ -264,31 +189,8 @@ for i in range(run):
     reference += front
 
 
-# bit-merge-random
-#bmrfront = []
-bmrprocessruns = []
-for i in range(run):
-    process, final = Experiment(bmrseeds)
 
-    front = get_non_dominated_solutions(final)#process[-1]
-    process.append(front)
-    bmrprocessruns.append(process)
-    reference += front
-
-# bit-merge-weight
-#bmwfront = []
-bmwprocessruns = []
-for i in range(run):
-    process, final = Experiment(bmwseeds)
-
-    front = get_non_dominated_solutions(final)#process[-1]
-    process.append(front)
-    bmwprocessruns.append(process)
-    reference += front
-
-
-
-# sting-merge-random
+# BB-Seed
 #smrfront = []
 smrprocessruns = []
 for i in range(run):
@@ -299,18 +201,6 @@ for i in range(run):
     smrprocessruns.append(process)
     reference += front
 
-
-
-# sting-merge-weigh
-#smwfront = []
-smwprocessruns = []
-for i in range(run):
-    process, final = Experiment(smwseeds)
-
-    front = get_non_dominated_solutions(final)#process[-1]
-    process.append(front)
-    smwprocessruns.append(process)
-    reference += front
 
 
 reference_front = get_non_dominated_solutions(reference)
@@ -381,7 +271,7 @@ logging.info('IGD mean:' + str(IGDchange[-1]))
 logging.info("*" * 20)
 
 
-#Agg
+#AO-Seed
 HVlist = []
 IGDlist = []
 for i in range(run):
@@ -417,10 +307,13 @@ logging.info(IGDchange)
 logging.info("Agg seed")
 logging.info('HV mean:' + str(HVchange[-1]))
 logging.info('IGD mean:' + str(IGDchange[-1]))
+#get sd
+logging.info('HV final:' + str(HVfinal))
+logging.info('IGD final:' + str(IGDfinal))
 logging.info("*" * 20)
 
 
-#SO
+#SO-Seed
 HVlist = []
 IGDlist = []
 for i in range(run):
@@ -456,87 +349,13 @@ logging.info(IGDchange)
 logging.info("SO seed")
 logging.info('HV mean:' + str(HVchange[-1]))
 logging.info('IGD mean:' + str(IGDchange[-1]))
+#get sd
+logging.info('HV final:' + str(HVfinal))
+logging.info('IGD final:' + str(IGDfinal))
 logging.info("*" * 20)
 
 
-#bit-merge-random
-HVlist = []
-IGDlist = []
-for i in range(run):
-    HV = []
-    IGD = []
-    for j in range(len(bmrprocessruns[i])):
-        front = bmrprocessruns[i][j]
-        for s in front:
-            s.objectives[0] = (s.objectives[0] - mintime) / (maxtime - mintime)
-            s.objectives[1] = (s.objectives[1] - mincost) / (maxcost - mincost)
-
-        indicator = HyperVolume([1, 1])
-        result = indicator.compute(front)
-        HV.append(result)
-
-        indicator = InvertedGenerationalDistance(normal_reference_front)
-        result = indicator.compute(front)
-        IGD.append(result)
-    HVlist.append(HV)
-    IGDlist.append(IGD)
-HVchange = [0] * len(bmrprocessruns[0])
-IGDchange = [0] * len(bmrprocessruns[0])
-for i in range(len(bmrprocessruns[0])):
-    for j in range(run):
-        HVchange[i] += HVlist[j][i]
-        IGDchange[i] += IGDlist[j][i]
-for i in range(len(bmrprocessruns[0])):
-    HVchange[i] = HVchange[i] / run
-    IGDchange[i] = IGDchange[i] /run
-
-logging.info(HVchange)
-logging.info(IGDchange)
-logging.info("BMR seed")
-logging.info('HV mean:' + str(HVchange[-1]))
-logging.info('IGD mean:' + str(IGDchange[-1]))
-logging.info("*" * 20)
-
-#bit-merge-weight
-HVlist = []
-IGDlist = []
-for i in range(run):
-    HV = []
-    IGD = []
-    for j in range(len(bmwprocessruns[i])):
-        front = bmwprocessruns[i][j]
-        for s in front:
-            s.objectives[0] = (s.objectives[0] - mintime) / (maxtime - mintime)
-            s.objectives[1] = (s.objectives[1] - mincost) / (maxcost - mincost)
-
-        indicator = HyperVolume([1, 1])
-        result = indicator.compute(front)
-        HV.append(result)
-
-        indicator = InvertedGenerationalDistance(normal_reference_front)
-        result = indicator.compute(front)
-        IGD.append(result)
-    HVlist.append(HV)
-    IGDlist.append(IGD)
-HVchange = [0] * len(bmwprocessruns[0])
-IGDchange = [0] * len(bmwprocessruns[0])
-for i in range(len(bmwprocessruns[0])):
-    for j in range(run):
-        HVchange[i] += HVlist[j][i]
-        IGDchange[i] += IGDlist[j][i]
-for i in range(len(bmwprocessruns[0])):
-    HVchange[i] = HVchange[i] / run
-    IGDchange[i] = IGDchange[i] /run
-
-logging.info(HVchange)
-logging.info(IGDchange)
-logging.info("BMW seed")
-logging.info('HV mean:' + str(HVchange[-1]))
-logging.info('IGD mean:' + str(IGDchange[-1]))
-logging.info("*" * 20)
-
-
-# sting-merge-random
+#BB-Seed
 HVlist = []
 IGDlist = []
 for i in range(run):
@@ -572,43 +391,7 @@ logging.info(IGDchange)
 logging.info("SSR seed")
 logging.info('HV mean:' + str(HVchange[-1]))
 logging.info('IGD mean:' + str(IGDchange[-1]))
-logging.info("*" * 20)
-
-
-#string-merge-weigh
-HVlist = []
-IGDlist = []
-for i in range(run):
-    HV = []
-    IGD = []
-    for j in range(len(smwprocessruns[i])):
-        front = smwprocessruns[i][j]
-        for s in front:
-            s.objectives[0] = (s.objectives[0] - mintime) / (maxtime - mintime)
-            s.objectives[1] = (s.objectives[1] - mincost) / (maxcost - mincost)
-
-        indicator = HyperVolume([1, 1])
-        result = indicator.compute(front)
-        HV.append(result)
-
-        indicator = InvertedGenerationalDistance(normal_reference_front)
-        result = indicator.compute(front)
-        IGD.append(result)
-    HVlist.append(HV)
-    IGDlist.append(IGD)
-HVchange = [0] * len(smwprocessruns[0])
-IGDchange = [0] * len(smwprocessruns[0])
-for i in range(len(smwprocessruns[0])):
-    for j in range(run):
-        HVchange[i] += HVlist[j][i]
-        IGDchange[i] += IGDlist[j][i]
-for i in range(len(smwprocessruns[0])):
-    HVchange[i] = HVchange[i] / run
-    IGDchange[i] = IGDchange[i] /run
-
-logging.info(HVchange)
-logging.info(IGDchange)
-logging.info("SSW seed")
-logging.info('HV mean:' + str(HVchange[-1]))
-logging.info('IGD mean:' + str(IGDchange[-1]))
+#get sd
+logging.info('HV final:' + str(HVfinal))
+logging.info('IGD final:' + str(IGDfinal))
 logging.info("*" * 20)
