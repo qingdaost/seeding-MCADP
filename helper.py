@@ -20,7 +20,7 @@
 'Montreal, Canada', 'Calgary, Canada', 'Kuala Lumpur, Malaysia', 'Chennai, India', 'Moscow, Russia', 
 'Osaka, Japan', 'Bangkok, Thailand']
 """
-
+#Network latency matrix
 latencymap = [[   0,    5,   52,   18,   15,   26,   40,   50,   47,   47,   30,   50,
    16,   89,   49,   20,   15,   21,   14,   17,    9,    8,   16,   50,
     5,   19,   12,   27,   15,   44,  110,   99,  105,   96,  104,  106,
