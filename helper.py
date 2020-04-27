@@ -1,7 +1,25 @@
 #dataset for MCADP
 
 #82 user centres from https://www.sprint.net/performance/
-#['Nashville, TN', 'Roachdale, IN', 'San Jose, CA', 'Omaha, NE', 'Saint Paul, MN', 'Houston, TX', 'Rialto, CA', 'Stockton, CA', 'Oroville, CA', 'Tacoma, WA', 'Springfield, MA', 'Seattle, WA', 'Relay, MD', 'Pearl City, HI', 'Phoenix, AZ', 'Pennsauken, NJ', 'Orlando, FL', 'New York City, NY', 'Kansas City, MO', 'Fort Worth, TX', 'Fairfax, SC', 'Chicago, IL', 'Washington, DC', 'Anaheim, CA', 'Atlanta, GA', 'Miami, FL', 'Akron, OH', 'Cheyenne, WY', 'Detroit, MI', 'Pueblo Viejo, Puerto Rico', 'Dublin, Ireland', 'London, UK', 'Amsterdam, Netherlands', 'Paris, France', 'Brussels, Belgium', 'Frankfurt, Germany', 'Hamburg, Germany', 'Copenhagen, Denmark', 'Oslo, Norway', 'Stockholm, Sweden', 'Zurich, Switzerland', 'Milan, Italy', 'Vienna, Austria', 'Hong Kong, China', 'Singapore', 'Taipei, Taiwan', 'Seoul, South Korea', 'Tokyo, Japan', 'Sydney, Australia', 'Auckland, New Zealand', 'Medellin, Colombia', 'Caracas, Venezuela', 'Santiago, Chile', 'Los Angeles, CA', 'Mexico City, Mexico', 'Ashburn, VA', 'Pittsburgh, PA', 'Philadelphia, PA', 'Palo Alto, CA', 'Dallas, TX', 'Johannesburg, South Africa', 'Toronto, Canada', 'Sao Paulo, Brazil', 'Harrison, NJ', 'Rio de Janeiro, Brazil', 'Manila, Philippines', 'Vancouver, Canada', 'New Delhi, India', 'Bangalore, India', 'Mumbai, India', 'Monterrey, Mexico', 'Warsaw, Poland', 'Buenos Aires, Argentina', 'Melbourne, Australia', 'Hyderabad, India', 'Montreal, Canada', 'Calgary, Canada', 'Kuala Lumpur, Malaysia', 'Chennai, India', 'Moscow, Russia', 'Osaka, Japan', 'Bangkok, Thailand']
+"""
+['Nashville, TN', 'Roachdale, IN', 'San Jose, CA', 'Omaha, NE', 'Saint Paul, MN', 
+'Houston, TX', 'Rialto, CA', 'Stockton, CA', 'Oroville, CA', 'Tacoma, WA', 
+'Springfield, MA', 'Seattle, WA', 'Relay, MD', 'Pearl City, HI', 'Phoenix, AZ', 
+'Pennsauken, NJ', 'Orlando, FL', 'New York City, NY', 'Kansas City, MO', 'Fort Worth, TX', 
+'Fairfax, SC', 'Chicago, IL', 'Washington, DC', 'Anaheim, CA', 'Atlanta, GA', 
+'Miami, FL', 'Akron, OH', 'Cheyenne, WY', 'Detroit, MI', 'Pueblo Viejo, Puerto Rico', 
+'Dublin, Ireland', 'London, UK', 'Amsterdam, Netherlands', 'Paris, France', 'Brussels, Belgium', 
+'Frankfurt, Germany', 'Hamburg, Germany', 'Copenhagen, Denmark', 'Oslo, Norway', 'Stockholm, Sweden', 
+'Zurich, Switzerland', 'Milan, Italy', 'Vienna, Austria', 'Hong Kong, China', 'Singapore', 
+'Taipei, Taiwan', 'Seoul, South Korea', 'Tokyo, Japan', 'Sydney, Australia', 'Auckland, New Zealand', 
+'Medellin, Colombia', 'Caracas, Venezuela', 'Santiago, Chile', 'Los Angeles, CA', 'Mexico City, Mexico', 
+'Ashburn, VA', 'Pittsburgh, PA', 'Philadelphia, PA', 'Palo Alto, CA', 'Dallas, TX', 
+'Johannesburg, South Africa', 'Toronto, Canada', 'Sao Paulo, Brazil', 'Harrison, NJ', 'Rio de Janeiro, Brazil', 
+'Manila, Philippines', 'Vancouver, Canada', 'New Delhi, India', 'Bangalore, India', 'Mumbai, India', 
+'Monterrey, Mexico', 'Warsaw, Poland', 'Buenos Aires, Argentina', 'Melbourne, Australia', 'Hyderabad, India', 
+'Montreal, Canada', 'Calgary, Canada', 'Kuala Lumpur, Malaysia', 'Chennai, India', 'Moscow, Russia', 
+'Osaka, Japan', 'Bangkok, Thailand']
+"""
 
 latencymap = [[   0,    5,   52,   18,   15,   26,   40,   50,   47,   47,   30,   50,
    16,   89,   49,   20,   15,   21,   14,   17,    9,    8,   16,   50,
