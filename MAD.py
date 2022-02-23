@@ -111,16 +111,16 @@ def getnl(request, workflow, solution):
     return anl
 
 #get makespan
-def getwrt(workflow, r, solution):
+def getwrt(workflow, T, solution):
     estlist = []
     for i in workflow:
         est = 0
         if i[0] != []:
             for j in i[0]:
                 s = workflow[j - 1][2]
-                if 1000 / sdict[s] * capacity[solution[0][code.index(s)]] > r:
+                if 1000 / sdict[s] * capacity[solution[0][code.index(s)]] > T[s]:
                     temp = estlist[j - 1] + 1 / (
-                            1000 / sdict[s] * capacity[solution[0][code.index(s)]] - r) * 1000 + \
+                            1000 / sdict[s] * capacity[solution[0][code.index(s)]] - T[s]) * 1000 + \
                            latency[cloud[solution[1][code.index(s)]][0]][cloud[solution[1][code.index(i[2])]][0]]
                 else:
                     temp = float("inf")
@@ -130,7 +130,7 @@ def getwrt(workflow, r, solution):
     # print(estlist)
     s = workflow[-1][2]
     if 1000 / sdict[s] * capacity[solution[0][code.index(s)]] > r:
-        rt = estlist[-1] + 1 / (1000 / sdict[s] * capacity[solution[0][code.index(s)]] - r) * 1000
+        rt = estlist[-1] + 1 / (1000 / sdict[s] * capacity[solution[0][code.index(s)]] - T[s]) * 1000
     else:
         rt = float("inf")
     # print("##response time: ", rt)
@@ -140,7 +140,8 @@ def getwrt(workflow, r, solution):
 def get_rt(solution):
     count = 0
     for i in range(N_WORKFLOW):
-        wrt = getwrt(wset[i], rateset[i], solution)
+        #wrt = getwrt(wset[i], rateset[i], solution)
+        wrt = getwrt(wset[i], T, solution)
         # print(wrt)
         nl = getnl(requestset[i], wset[i], solution)
         # print(nl)
